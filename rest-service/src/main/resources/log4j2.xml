@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN" monitorInterval="30">
+    <!--先定义所有的appender-->
+    <appenders>
+        <!--这个输出控制台的配置 部署到服务器要把console级别的注释掉 -->
+        <console name="Console" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8" pattern="%d{yyyy-MM HH:mm:ss:SSS} | [%X{traceId}] | [%p] | [%t]-[%c{1.}] | %m%n"/>
+        </console>
+       <!-- 服务端配置-->
+        <RollingFile name="RollingFileInfo" fileName="/home/app/logs/api-mock.log"
+                     filePattern="home/app/logs/$${date:yyyy-MM}/api-mock-%d{yyyy-MM-dd}-%i.log">
+            <!-- PatternLayout-打印格式+内容-->
+            <PatternLayout charset="UTF-8" pattern="%d{yyyy-MM HH:mm:ss:SSS} | [%X{traceId}] | [%p] | [%t]-[%c{1.}] | %m%n"/>
+            <!-- Policies- 文件切分策略 -->
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval ="1"/>
+                <SizeBasedTriggeringPolicy size="200 MB"/>   <!-- 切分日志的大小 -->
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="nomax"/>
+
+        </RollingFile>
+        <!--异步日志-->
+        <async name="Async" blocking="false" bufferSize="2048">
+            <appender-ref ref="RollingFileInfo"/>
+        </async>
+
+    </appenders>
+
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <loggers>
+
+        <Logger name="com.sliangy" level="info" additivity="false">
+            <appender-ref ref ="Async"/>
+            <appender-ref ref ="Console"/>
+        </Logger>
+
+        <root level="info">
+
+            <appender-ref ref="Async"/>
+            <appender-ref ref ="Console"/>   <!--  部署到服务器要把console级别的注释掉 -->
+        </root>
+
+    </loggers>
+</configuration>
