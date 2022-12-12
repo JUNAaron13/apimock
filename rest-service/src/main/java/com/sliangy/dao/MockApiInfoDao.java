@@ -14,7 +14,6 @@ import java.util.List;
  * @author makejava
  * @since 2022-12-01 22:14:37
  */
-@Mapper
 public interface MockApiInfoDao {
 
     /**

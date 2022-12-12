@@ -5,8 +5,9 @@
     <resultMap type="com.sliangy.entity.MockApiResponse" id="MockApiResponseMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="apiName" column="api_name" jdbcType="VARCHAR"/>
-        <result property="response" column="response" jdbcType="VARCHAR"/>
-        <result property="order" column="order" jdbcType="VARCHAR"/>
+        <result property="resType" column="res_type" jdbcType="INTEGER"/>
+        <result property="resContent" column="res_content" jdbcType="VARCHAR"/>
+        <result property="resOrder" column="res_order" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -14,15 +15,33 @@
     <!--查询单个-->
     <select id="queryById" resultMap="MockApiResponseMap">
         select
-          id, api_name, response, order, create_time, modify_time
+          id, api_name, res_type, res_content, res_order, create_time, modify_time
         from mock_api_response
         where id = #{id}
+    </select>
+
+
+    <select id="selectByOrder" resultMap="MockApiResponseMap">
+      SELECT
+        id, api_name, res_type, res_content, res_order, create_time, modify_time
+      FROM mock_api_response
+      WHERE api_name = #{apiName}
+      ORDER BY res_order asc limit 1;
+    </select>
+
+
+    <select id="selectByApiNameRandom" resultMap="MockApiResponseMap">
+      SELECT
+        id, api_name, res_type, res_content, res_order, create_time, modify_time
+      FROM mock_api_response
+      WHERE api_name = #{apiName}
+      ORDER BY RAND() limit 1;
     </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="MockApiResponseMap">
         select
-          id, api_name, response, order, create_time, modify_time
+        id, api_name, res_type, res_content, res_order, create_time, modify_time
         from mock_api_response
         <where>
             <if test="id != null">
@@ -31,11 +50,14 @@
             <if test="apiName != null and apiName != ''">
                 and api_name = #{apiName}
             </if>
-            <if test="response != null and response != ''">
-                and response = #{response}
+            <if test="resType != null">
+                and res_type = #{resType}
             </if>
-            <if test="order != null and order != ''">
-                and order = #{order}
+            <if test="resContent != null and resContent != ''">
+                and res_content = #{resContent}
+            </if>
+            <if test="res_order != null">
+                and res_order = #{resOrder}
             </if>
             <if test="createTime != null">
                 and create_time = #{createTime}
@@ -58,11 +80,14 @@
             <if test="apiName != null and apiName != ''">
                 and api_name = #{apiName}
             </if>
-            <if test="response != null and response != ''">
-                and response = #{response}
+            <if test="resType != null">
+                and res_type = #{resType}
             </if>
-            <if test="order != null and order != ''">
-                and order = #{order}
+            <if test="resContent != null and resContent != ''">
+                and res_content = #{resContent}
+            </if>
+            <if test="res_order != null">
+                and res_order = #{resOrder}
             </if>
             <if test="createTime != null">
                 and create_time = #{createTime}
@@ -75,28 +100,29 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into mock_api_response(api_name, response, order, create_time, modify_time)
-        values (#{apiName}, #{response}, #{order}, #{createTime}, #{modifyTime})
+        insert into mock_api_response(api_name, res_type, res_content, res_order, create_time, modify_time)
+        values (#{apiName}, #{resType}, #{resContent}, #{resOrder}, #{createTime}, #{modifyTime})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mock_api_response(api_name, response, order, create_time, modify_time)
+        insert into mock_api_response(api_name, res_type, res_content, res_order, create_time, modify_time)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.apiName}, #{entity.response}, #{entity.order}, #{entity.createTime}, #{entity.modifyTime})
+            (#{entity.apiName}, #{entity.resType}, #{entity.resContent}, #{entity.res_order}, #{entity.createTime}, #{entity.modifyTime})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into mock_api_response(api_name, response, order, create_time, modify_time)
+        insert into mock_api_response(api_name, res_type, res_content, res_order, create_time, modify_time)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.apiName}, #{entity.response}, #{entity.order}, #{entity.createTime}, #{entity.modifyTime})
+            (#{entity.apiName}, #{entity.resType}, #{entity.resContent}, #{entity.res_order}, #{entity.createTime}, #{entity.modifyTime})
         </foreach>
         on duplicate key update
         api_name = values(api_name),
-        response = values(response),
-        order = values(order),
+        res_type = values(res_type),
+        res_content = values(res_content),
+        res_order = values(res_order),
         create_time = values(create_time),
         modify_time = values(modify_time)
     </insert>
@@ -108,11 +134,14 @@
             <if test="apiName != null and apiName != ''">
                 api_name = #{apiName},
             </if>
-            <if test="response != null and response != ''">
-                response = #{response},
+            <if test="resType != null">
+                res_type = #{resType},
             </if>
-            <if test="order != null and order != ''">
-                order = #{order},
+            <if test="resContent != null and resContent != ''">
+                res_content = #{resContent},
+            </if>
+            <if test="res_order != null">
+                res_order = #{resOrder},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime},

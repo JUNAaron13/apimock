@@ -1,6 +1,7 @@
 package com.sliangy.dao;
 
 import com.sliangy.entity.MockApiResponse;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
@@ -9,9 +10,15 @@ import java.util.List;
  * (MockApiResponse)表数据库访问层
  *
  * @author makejava
- * @since 2022-12-05 21:07:32
+ * @since 2022-12-08 00:09:52
  */
 public interface MockApiResponseDao {
+
+
+    MockApiResponse selectByApiNameRandom(String apiName);
+
+    MockApiResponse selectByOrder(String apiName);
+
 
     /**
      * 通过ID查询单条数据

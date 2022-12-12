@@ -6,13 +6,20 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.7</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+
     <groupId>com.sliangy</groupId>
     <artifactId>apimocker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>    <!-- 标记这是一个Pom-->
     <name>apimocker</name>
+
+
+    <modules>
+    <module>rest-service</module>
+    </modules>
+
 
     <description>Demo project for Spring Boot</description>
 
